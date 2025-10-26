@@ -1,9 +1,19 @@
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 import datetime
+import os
+import logging
 
-BOT_TOKEN = "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9DV1ZBHw"
+# Bot token environment variable dan olinadi
+BOT_TOKEN = os.environ.get('BOT_TOKEN', '8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9DV1ZBHw')
 
+# Log sozlash
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
+# ... (qolgan kod o'zgarmaydi, faqat token qismi yangilandi)
 # Kategoriyalar va narxlari
 CATEGORIES = {
     "🛒 Shopify Kurslari": {
@@ -337,17 +347,26 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await update.message.reply_text("❌ Iltimos, pastdagi tugmalardan foydalaning!")
 
+def main():
+    try:
+        app = Application.builder().token(BOT_TOKEN).build()
+        
+        # Handlerlar
+        app.add_handler(CommandHandler('start', start_command))
+        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
+        app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
+        app.add_handler(CallbackQueryHandler(handle_buy_callback, pattern="^buy_"))
+        app.add_handler(CallbackQueryHandler(handle_copy_card, pattern="^copy_card$"))
+        app.add_handler(CallbackQueryHandler(handle_approval, pattern="^(approve|reject)_"))
+        
+        print("🤖 Mozda Academy Bot ishga tushdi!")
+        print(f"📊 Cheklar kanalga yuboriladi: {ADMIN_CHANNEL_ID}")
+        app.run_polling(drop_pending_updates=True)
+    except Exception as e:
+        print(f"Botda xatolik: {e}")
+        import time
+        time.sleep(10)
+        main()  # Qayta ishga tushish
+
 if __name__ == '__main__':
-    app = Application.builder().token(BOT_TOKEN).build()
-    
-    # Handlerlar
-    app.add_handler(CommandHandler('start', start_command))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
-    app.add_handler(CallbackQueryHandler(handle_buy_callback, pattern="^buy_"))
-    app.add_handler(CallbackQueryHandler(handle_copy_card, pattern="^copy_card$"))
-    app.add_handler(CallbackQueryHandler(handle_approval, pattern="^(approve|reject)_"))
-    
-    print("🤖 Mozda Academy Bot ishga tushdi!")
-    print(f"📊 Cheklar kanalga yuboriladi: {ADMIN_CHANNEL_ID}")
-    app.run_polling(drop_pending_updates=True)
+    main()
