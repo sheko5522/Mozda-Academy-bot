@@ -160,16 +160,16 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 • Shopify Maxsus Ma'lumotlar
 • Shopify dropshipping bonus
 • Target pro kursi
-• 3 ta savolga Kurs Asoschisini aniq javob berishi
-• 4000+ AI & Chat Bot Worklov Sxemalari"""
+• 4000+ AI & Chat Bot Worklov Sxemalari
+• 3 ta savolga Kurs Asoschisini aniq javob berishi"""
         
         inline_keyboard = [
-            [InlineKeyboardButton("🛒 Paketni sotib olish", callback_data="buy_6 ta Kurs Jamlanmasi")]
+            [InlineKeyboardButton("🛒 Paketni sotib olish", callback_data="buy_5 ta Kurs Jamlanmasi")]
         ]
         inline_markup = InlineKeyboardMarkup(inline_keyboard)
         
         await update.message.reply_text(package_text, reply_markup=inline_markup)
-        context.user_data['selected_course'] = "6 ta Kurs Jamlanmasi"
+        context.user_data['selected_course'] = "5 ta Kurs Jamlanmasi"
         context.user_data['course_price'] = DISCOUNT_PRICE
     
     else:
@@ -247,7 +247,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         
         await update.message.reply_text(
-            "✅ Chek qabul qilindi! Tekshirish uchun 'Cheklarni tekshirish' kanaliga yuborildi.\n\n⏳ Tez orada javob olasiz."
+            "✅ Chek qabul qilindi! \n\n⏳ Tez orada javob olasiz."
         )
         logger.info(f"Screenshot sent to admin channel for user {user.id}")
     except Exception as e:
@@ -295,9 +295,9 @@ async def handle_approval(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             success_text = f"""✅ To'lovingiz qabul qilindi!
 
-🎉 Tabriklaymiz! "{course_name}" kursi sizga taqdim qilindi.
+🎉 Tabriklaymiz! "{course_name}" kursi sizga taqdim qilinadi.
 
-📞 Guruhga qo'shilish uchun @Moonboys_5522 ga murojaat qiling."""
+📞 Kurs guruhiga qo'shilish uchun @Moonboys_5522 ga murojaat qiling."""
         
         try:
             await context.bot.send_message(
