@@ -228,7 +228,11 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     course_name = context.user_data.get('selected_course', 'Noma\'lum kurs')
     
-    admin_message = f"🆕 YANGI TO'LOV CHEKI!\n\n{user_info}\n📦 Kurs: {course_name}\n⏰ Vaqt: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+    # Toshkent vaqt zonasi uchun (UTC+5)
+    current_time = datetime.datetime.now() + datetime.timedelta(hours=5)
+    formatted_time = current_time.strftime('%d.%m.%Y | %H:%M:%S')
+    
+    admin_message = f"🆕 YANGI TO'LOV CHEKI!\n\n{user_info}\n📦 Kurs: {course_name}\n⏰ Vaqt: {formatted_time}"
     
     inline_keyboard = [
         [
