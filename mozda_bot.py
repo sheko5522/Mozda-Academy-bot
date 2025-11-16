@@ -17,7 +17,7 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN', "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9
 # Kategoriyalar va narxlari
 CATEGORIES = {
     "🛒 Shopify Kurslari": {
-        "price": "299 ming so'm",
+        "price": "199 ming so'm",
         "courses": [
             "📦 Printify kursi",
             "🌐 Dropshipping", 
@@ -27,7 +27,7 @@ CATEGORIES = {
         ]
     },
     "🍇 Uzum Market": {
-        "price": "199 ming so'm",
+        "price": "99 ming so'm",
         "courses": [
             "📘 Uzum Premium",
             "📦 Mahsulot joylash",
@@ -37,7 +37,7 @@ CATEGORIES = {
         ]
     },
     "🇨🇳 Xitoy Kurslari": {
-        "price": "99 ming so'm",
+        "price": "59 ming so'm",
         "courses": [
             "🛒 1688 zakaz",
             "📦 Taobao zakaz",
@@ -47,7 +47,7 @@ CATEGORIES = {
         ]
     },
     "🇹🇷 Turkiya Kursi": {
-        "price": "99 ming so'm", 
+        "price": "59 ming so'm", 
         "courses": [
             "📦 Optom kanallar",
             "🛒 Zakaz qilish",
@@ -55,7 +55,7 @@ CATEGORIES = {
         ]
     },
     "📢 Marketing": {
-        "price": "99 ming so'm",
+        "price": "59 ming so'm",
         "courses": [
             "📸 Instagram kursi",
             "✈️ Telegram kursi", 
@@ -66,8 +66,8 @@ CATEGORIES = {
     }
 }
 
-PACKAGE_PRICE = "895,000 so'm"
-DISCOUNT_PRICE = "397 ming so'm"
+PACKAGE_PRICE = "475,000 so'm"
+DISCOUNT_PRICE = "190,000 so'm"
 
 # Karta ma'lumotlari
 CARD_INFO = {
@@ -77,7 +77,7 @@ CARD_INFO = {
 
 # Guruh ID lari - O'Zgartiring!
 COURSE_GROUPS = {
-    "6 ta Kurs Jamlanmasi": -1001234567890,
+    "5 ta Kurs Jamlanmasi": -1001234567890,
     "🛒 Shopify Kurslari": -1001234567891,
     "🍇 Uzum Market": -1001234567892,
     "🇨🇳 Xitoy Kurslari": -1001234567893,
@@ -99,7 +99,7 @@ main_reply_markup = ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
 categories_keyboard = [
     [KeyboardButton("🛒 Shopify Kurslari"), KeyboardButton("🍇 Uzum Market")],
     [KeyboardButton("🇨🇳 Xitoy Kurslari"), KeyboardButton("🇹🇷 Turkiya Kursi")],
-    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 6 ta Kurs Jamlanmasi")],
+    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 5 ta Kurs Jamlanmasi")],
     [KeyboardButton("🔙 Orqaga")]
 ]
 categories_reply_markup = ReplyKeyboardMarkup(categories_keyboard, resize_keyboard=True)
@@ -141,23 +141,26 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         context.user_data['selected_course'] = category_name
         context.user_data['course_price'] = category['price']
         
-    elif category_name == "🎁 6 ta Kurs Jamlanmasi":
-        package_text = f"""🎁 6 TA KURS JAMLAMASI
+    elif category_name == "🎁 5 ta Kurs Jamlanmasi":
+        package_text = f"""🎁 5 TA KURS JAMLAMASI
 
 💰 Oddiy narx: {PACKAGE_PRICE}
 🔥 Chegirmali narx: {DISCOUNT_PRICE}
 
 📦 JAMLANMADA NIMA BOR:
-• Shopify kurslari (299 ming)
-• Uzum Market (199 ming) 
-• Xitoy kurslari (99 ming)
-• Turkiya kursi (99 ming)
-• Marketing (99 ming)
+• Shopify kurslari (199 ming)
+• Uzum Market (99 ming) 
+• Xitoy kurslari (59 ming)
+• Turkiya kursi (59 ming)
+• Marketing (59 ming)
 
 🎁 MAXSUS BONUSLAR:
 • Sun'iy Intellekt Kursi
 • Mukammal Telegram Bot Yaratish  
 • Shopify Maxsus Ma'lumotlar
+• Shopify dropshipping bonus
+• Target pro kursi
+• 3 ta savolga Kurs Asoschisini aniq javob berishi
 • 4000+ AI & Chat Bot Worklov Sxemalari"""
         
         inline_keyboard = [
@@ -340,7 +343,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n📱 Telefon: +998 99 497 55 22\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
         )
-    elif text in CATEGORIES or text == "🎁 6 ta Kurs Jamlanmasi":
+    elif text in CATEGORIES or text == "🎁 5 ta Kurs Jamlanmasi":
         await show_category_info(update, context)
     elif text == "🔙 Orqaga":
         await update.message.reply_text("🏠 Bosh menyu:", reply_markup=main_reply_markup)
