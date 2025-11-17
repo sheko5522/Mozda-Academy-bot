@@ -3,6 +3,8 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQu
 import datetime
 import os
 import logging
+import json
+from pathlib import Path
 
 # Logging sozlash
 logging.basicConfig(
@@ -13,6 +15,53 @@ logger = logging.getLogger(__name__)
 
 # Environment variables dan token olish
 BOT_TOKEN = os.environ.get('BOT_TOKEN', "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9DV1ZBHw")
+
+# ========== YANGI: DATABASE FUNKSIYALARI ==========
+DATABASE_FILE = "users_database.json"
+
+def load_users():
+    """Foydalanuvchilarni yuklash"""
+    if Path(DATABASE_FILE).exists():
+        with open(DATABASE_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {"users": {}, "total": 0}
+
+def save_users(data):
+    """Foydalanuvchilarni saqlash"""
+    with open(DATABASE_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+def add_user_to_db(user_id, username, first_name):
+    """Yangi foydalanuvchini qo'shish"""
+    db = load_users()
+    if str(user_id) not in db["users"]:
+        db["users"][str(user_id)] = {
+            "id": user_id,
+            "username": username,
+            "first_name": first_name,
+            "joined": datetime.datetime.now().isoformat()
+        }
+        db["total"] += 1
+        save_users(db)
+        return True
+    return False
+
+async def update_bot_description(context):
+    """Bot description ni yangilash"""
+    try:
+        db = load_users()
+        total = db["total"]
+        
+        # Bot description ni yangilash
+        description = f"{total:,} foydalanuvchi".replace(",", " ")
+        
+        await context.bot.set_my_description(
+            description=description
+        )
+        logger.info(f"✅ Bot description yangilandi: {total} foydalanuvchi")
+    except Exception as e:
+        logger.error(f"❌ Description yangilashda xatolik: {e}")
+# ========== YANGI KOD TUGADI ==========
 
 # Kategoriyalar va narxlari
 CATEGORIES = {
@@ -106,6 +155,15 @@ categories_reply_markup = ReplyKeyboardMarkup(categories_keyboard, resize_keyboa
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(f"User {user.id} started the bot")
+    
+    # ========== YANGI: Foydalanuvchini database ga qo'shish ==========
+    is_new = add_user_to_db(user.id, user.username, user.first_name)
+    if is_new:
+        logger.info(f"🆕 Yangi foydalanuvchi: {user.id} - {user.first_name}")
+        # Bot description ni yangilash
+        await update_bot_description(context)
+    # ========== YANGI KOD TUGADI ==========
+    
     await update.message.reply_text(
         f"Assalomu aleykum {user.first_name}! 👋\n\nMozda Academy botiga xush kelibsiz!\n\n✨ Siz bu botda professional darajaga va daromadga cho'qqiga chiqasiz!",
         reply_markup=main_reply_markup
@@ -360,6 +418,11 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     """Bot ishga tushirish"""
     logger.info("Starting Mozda Academy Bot...")
+    
+    # ========== YANGI: Database yuklash ==========
+    db = load_users()
+    logger.info(f"📊 Database yuklandi: {db['total']} foydalanuvchi")
+    # ========== YANGI KOD TUGADI ==========
     
     app = Application.builder().token(BOT_TOKEN).build()
     
