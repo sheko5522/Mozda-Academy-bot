@@ -13,11 +13,11 @@ MONGO_URL = "mongodb://localhost:27017/"  # Bu joyga o'z MongoDB URL ni kiriting
 
 # Obuna bo'lish kerak bo'lgan kanallar
 CHANNELS = [
-    "@javokhirtest",  # Bu yerga o'z kanalingizni qo'shing
+    "@Mozda_Academy",  # Mozda Academy kanali
 ]
 
 # Kino yuklaydigan kanalingiz username (@ belgisiz)
-MOVIE_CHANNEL = "javokhirtest"  # Bu yerga kino yuklaydigan kanal username ni yozing
+MOVIE_CHANNEL = "Mozda_Academy"  # Mozda Academy - kino yuklaydigan kanal
 
 # ==================== BOT VA DATABASE SOZLASH ====================
 bot = telebot.TeleBot(TOKEN)
