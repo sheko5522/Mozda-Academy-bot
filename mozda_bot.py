@@ -65,7 +65,6 @@ CATEGORIES = {
         ]
     }
 }
-
 PACKAGE_PRICE = "475,000 so'm"
 DISCOUNT_PRICE = "199,000 so'm"
 
