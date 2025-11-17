@@ -3,8 +3,6 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQu
 import datetime
 import os
 import logging
-import json
-from pathlib import Path
 
 # Logging sozlash
 logging.basicConfig(
@@ -16,89 +14,10 @@ logger = logging.getLogger(__name__)
 # Environment variables dan token olish
 BOT_TOKEN = os.environ.get('BOT_TOKEN', "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9DV1ZBHw")
 
-# DATABASE FAYLI (JSON)
-DATABASE_FILE = "bot_users.json"
-
-# Database funksiyalari
-def load_database():
-    """Database dan ma'lumotlarni yuklash"""
-    if Path(DATABASE_FILE).exists():
-        with open(DATABASE_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {
-        "users": {},
-        "stats": {
-            "total_users": 0,
-            "total_payments": 0,
-            "total_revenue": 0
-        }
-    }
-
-def save_database(data):
-    """Database ga saqlash"""
-    with open(DATABASE_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-def add_user(user_id, username, first_name):
-    """Yangi foydalanuvchini qo'shish"""
-    db = load_database()
-    
-    if str(user_id) not in db["users"]:
-        db["users"][str(user_id)] = {
-            "user_id": user_id,
-            "username": username,
-            "first_name": first_name,
-            "joined_date": datetime.datetime.now().isoformat(),
-            "last_active": datetime.datetime.now().isoformat(),
-            "purchased_courses": [],
-            "total_spent": 0
-        }
-        db["stats"]["total_users"] += 1
-        save_database(db)
-        logger.info(f"Yangi foydalanuvchi: {user_id} (@{username})")
-        return True
-    else:
-        # Mavjud foydalanuvchining last_active ni yangilash
-        db["users"][str(user_id)]["last_active"] = datetime.datetime.now().isoformat()
-        save_database(db)
-        return False
-
-def get_user_count():
-    """Jami foydalanuvchilar sonini olish"""
-    db = load_database()
-    return db["stats"]["total_users"]
-
-def get_active_users_today():
-    """Bugun aktiv foydalanuvchilar"""
-    db = load_database()
-    today = datetime.datetime.now().date()
-    active = 0
-    
-    for user_data in db["users"].values():
-        last_active = datetime.datetime.fromisoformat(user_data["last_active"]).date()
-        if last_active == today:
-            active += 1
-    
-    return active
-
-def get_new_users_today():
-    """Bugun qo'shilgan yangi foydalanuvchilar"""
-    db = load_database()
-    today = datetime.datetime.now().date()
-    new = 0
-    
-    for user_data in db["users"].values():
-        joined = datetime.datetime.fromisoformat(user_data["joined_date"]).date()
-        if joined == today:
-            new += 1
-    
-    return new
-
 # Kategoriyalar va narxlari
 CATEGORIES = {
     "🛒 Shopify Kurslari": {
         "price": "199 ming so'm",
-        "price_numeric": 199000,
         "courses": [
             "📦 Printify kursi",
             "🌐 Dropshipping", 
@@ -109,7 +28,6 @@ CATEGORIES = {
     },
     "🍇 Uzum Market": {
         "price": "99 ming so'm",
-        "price_numeric": 99000,
         "courses": [
             "📘 Uzum Premium",
             "📦 Mahsulot joylash",
@@ -120,7 +38,6 @@ CATEGORIES = {
     },
     "🇨🇳 Xitoy Kurslari": {
         "price": "59 ming so'm",
-        "price_numeric": 59000,
         "courses": [
             "🛒 1688 zakaz",
             "📦 Taobao zakaz",
@@ -130,8 +47,7 @@ CATEGORIES = {
         ]
     },
     "🇹🇷 Turkiya Kursi": {
-        "price": "59 ming so'm",
-        "price_numeric": 59000,
+        "price": "59 ming so'm", 
         "courses": [
             "📦 Optom kanallar",
             "🛒 Zakaz qilish",
@@ -140,7 +56,6 @@ CATEGORIES = {
     },
     "📢 Marketing": {
         "price": "59 ming so'm",
-        "price_numeric": 59000,
         "courses": [
             "📸 Instagram kursi",
             "✈️ Telegram kursi", 
@@ -152,7 +67,6 @@ CATEGORIES = {
 }
 PACKAGE_PRICE = "475,000 so'm"
 DISCOUNT_PRICE = "199,000 so'm"
-PACKAGE_PRICE_NUMERIC = 199000
 
 # Karta ma'lumotlari
 CARD_INFO = {
@@ -160,7 +74,7 @@ CARD_INFO = {
     "name": "Shaxzod Odilov"
 }
 
-# Guruh ID lari
+# Guruh ID lari - O'Zgartiring!
 COURSE_GROUPS = {
     "5 ta Kurs Jamlanmasi": -1001234567890,
     "🛒 Shopify Kurslari": -1001234567891,
@@ -170,16 +84,13 @@ COURSE_GROUPS = {
     "📢 Marketing": -1001234567895
 }
 
-# ADMIN KANAL ID
+# KANAL ID
 ADMIN_CHANNEL_ID = -1003297660888
-
-# ADMIN ID LAR (Statistika ko'rish uchun)
-ADMIN_IDS = [YOUR_ADMIN_ID_HERE]  # O'z Telegram ID ingizni kiriting
 
 # 1. ASOSIY MENYU
 main_keyboard = [
     [KeyboardButton("📚 Kurslar ro'yxati")],
-    [KeyboardButton("👨‍💼 Admin bilan bog'lanish"), KeyboardButton("📊 Statistika")]
+    [KeyboardButton("👨‍💼 Admin bilan bog'lanish")]
 ]
 main_reply_markup = ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
 
@@ -194,65 +105,11 @@ categories_reply_markup = ReplyKeyboardMarkup(categories_keyboard, resize_keyboa
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    
-    # Foydalanuvchini database ga qo'shish
-    is_new = add_user(user.id, user.username, user.first_name)
-    
-    if is_new:
-        logger.info(f"🆕 Yangi foydalanuvchi: {user.id} (@{user.username}) - {user.first_name}")
-        
-        # Adminga xabar yuborish (ixtiyoriy)
-        try:
-            admin_notification = f"""🆕 YANGI FOYDALANUVCHI!
-            
-👤 Ism: {user.first_name}
-🆔 ID: {user.id}
-📱 Username: @{user.username if user.username else 'Mavjud emas'}
-⏰ Vaqt: {datetime.datetime.now().strftime('%d.%m.%Y %H:%M')}
-
-📊 Jami foydalanuvchilar: {get_user_count()}"""
-            
-            await context.bot.send_message(
-                chat_id=ADMIN_CHANNEL_ID,
-                text=admin_notification
-            )
-        except Exception as e:
-            logger.error(f"Admin xabarida xatolik: {e}")
-    
+    logger.info(f"User {user.id} started the bot")
     await update.message.reply_text(
         f"Assalomu aleykum {user.first_name}! 👋\n\nMozda Academy botiga xush kelibsiz!\n\n✨ Siz bu botda professional darajaga va daromadga cho'qqiga chiqasiz!",
         reply_markup=main_reply_markup
     )
-
-async def show_statistics(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Statistikani ko'rsatish"""
-    user_id = update.effective_user.id
-    
-    total_users = get_user_count()
-    active_today = get_active_users_today()
-    new_today = get_new_users_today()
-    
-    # Asosiy statistika (hamma ko'radi)
-    stats_text = f"""📊 BOT STATISTIKASI
-
-👥 Jami foydalanuvchilar: {total_users}
-✅ Bugun aktiv: {active_today}
-🆕 Bugun qo'shilgan: {new_today}
-
-⏰ Vaqt: {datetime.datetime.now().strftime('%d.%m.%Y %H:%M')}"""
-    
-    # Agar admin bo'lsa, qo'shimcha ma'lumot
-    if user_id in ADMIN_IDS:
-        db = load_database()
-        stats_text += f"""
-
-━━━━━━━━━━━━━━━━━━━━━
-👨‍💼 ADMIN STATISTIKASI:
-
-💰 Jami to'lovlar: {db['stats']['total_payments']}
-💵 Jami daromad: {db['stats']['total_revenue']:,} so'm"""
-    
-    await update.message.reply_text(stats_text)
 
 async def show_categories(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -282,7 +139,6 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(info_text, reply_markup=inline_markup)
         context.user_data['selected_course'] = category_name
         context.user_data['course_price'] = category['price']
-        context.user_data['course_price_numeric'] = category['price_numeric']
         
     elif category_name == "🎁 5 ta Kurs Jamlanmasi":
         package_text = f"""🎁 5 TA KURS JAMLAMASI
@@ -314,7 +170,6 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(package_text, reply_markup=inline_markup)
         context.user_data['selected_course'] = "5 ta Kurs Jamlanmasi"
         context.user_data['course_price'] = DISCOUNT_PRICE
-        context.user_data['course_price_numeric'] = PACKAGE_PRICE_NUMERIC
     
     else:
         await update.message.reply_text("❌ Iltimos, pastdagi tugmalardan foydalaning!")
@@ -343,6 +198,21 @@ async def handle_buy_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
     
     await query.edit_message_text(payment_text, parse_mode='HTML')
 
+async def handle_copy_card(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    
+    copy_text = f"""📋 Karta raqamini nusxalash uchun:
+
+Karta raqami:
+<code>{CARD_INFO['number']}</code>
+
+👤 Karta egasi: {CARD_INFO['name']}
+
+💡 Raqamni bosib nusxalang va bank ilovasiga o'ting."""
+    
+    await query.message.reply_text(copy_text, parse_mode='HTML')
+
 async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Rasm (chek) yuborilganda ishlaydi"""
     user = update.effective_user
@@ -356,18 +226,12 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_info += f"\n🆔 ID: {user.id}"
     
     course_name = context.user_data.get('selected_course', 'Noma\'lum kurs')
-    course_price = context.user_data.get('course_price', 'Noma\'lum')
     
     # Toshkent vaqt zonasi uchun (UTC+5)
     current_time = datetime.datetime.now() + datetime.timedelta(hours=5)
     formatted_time = current_time.strftime('%d.%m.%Y | %H:%M:%S')
     
-    admin_message = f"""🆕 YANGI TO'LOV CHEKI!
-
-{user_info}
-📦 Kurs: {course_name}
-💰 Narxi: {course_price}
-⏰ Vaqt: {formatted_time}"""
+    admin_message = f"🆕 YANGI TO'LOV CHEKI!\n\n{user_info}\n📦 Kurs: {course_name}\n⏰ Vaqt: {formatted_time}"
     
     inline_keyboard = [
         [
@@ -423,23 +287,6 @@ async def handle_approval(update: Update, context: ContextTypes.DEFAULT_TYPE):
     course_name = parts[2] if len(parts) > 2 else "Noma'lum kurs"
     
     if action == "approve":
-        # Database ga to'lovni qo'shish
-        db = load_database()
-        if str(user_id) in db["users"]:
-            if course_name not in db["users"][str(user_id)]["purchased_courses"]:
-                db["users"][str(user_id)]["purchased_courses"].append(course_name)
-                
-                # Narxni aniqlash
-                if course_name == "5 ta Kurs Jamlanmasi":
-                    price = PACKAGE_PRICE_NUMERIC
-                else:
-                    price = CATEGORIES.get(course_name, {}).get("price_numeric", 0)
-                
-                db["users"][str(user_id)]["total_spent"] += price
-                db["stats"]["total_payments"] += 1
-                db["stats"]["total_revenue"] += price
-                save_database(db)
-        
         added_to_group = await add_user_to_group(context, user_id, course_name)
         
         if added_to_group:
@@ -495,8 +342,6 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     if text == "📚 Kurslar ro'yxati":
         await show_categories(update, context)
-    elif text == "📊 Statistika":
-        await show_statistics(update, context)
     elif text == "👨‍💼 Admin bilan bog'lanish":
         await update.message.reply_text(
             "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n📱 Telefon: +998 99 497 55 22\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
@@ -516,10 +361,6 @@ def main():
     """Bot ishga tushirish"""
     logger.info("Starting Mozda Academy Bot...")
     
-    # Database yaratish
-    db = load_database()
-    logger.info(f"📊 Database yuklandi: {db['stats']['total_users']} foydalanuvchi")
-    
     app = Application.builder().token(BOT_TOKEN).build()
     
     # Handlerlar
@@ -527,13 +368,13 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
     app.add_handler(MessageHandler(filters.PHOTO, handle_photo))
     app.add_handler(CallbackQueryHandler(handle_buy_callback, pattern="^buy_"))
+    app.add_handler(CallbackQueryHandler(handle_copy_card, pattern="^copy_card$"))
     app.add_handler(CallbackQueryHandler(handle_approval, pattern="^(approve|reject)_"))
     
     # Error handler
     app.add_error_handler(error_handler)
     
     logger.info("🤖 Mozda Academy Bot ishga tushdi!")
-    logger.info(f"📊 Jami foydalanuvchilar: {db['stats']['total_users']}")
     logger.info(f"📊 Cheklar kanalga yuboriladi: {ADMIN_CHANNEL_ID}")
     
     # Polling rejimida ishga tushirish
