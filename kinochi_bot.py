@@ -6,7 +6,7 @@ import re
 
 # ==================== SOZLAMALAR ====================
 # BOT tokeni
-TOKEN = "8261135129:AAFu_fQsMOcTT-kqoQlmb9NzL7F6UGoaKeg"
+TOKEN = "8261135129:AAGqAfE4H4RTPz1fiVO-tHLwFzAFVX2gk9Q"
 
 # MongoDB URL (MongoDB Atlas yoki local MongoDB)
 MONGO_URL = "mongodb://localhost:27017/"  # Bu joyga o'z MongoDB URL ni kiriting
