@@ -68,9 +68,9 @@ CATEGORIES = {
 PACKAGE_PRICE = "475,000 so'm"
 DISCOUNT_PRICE = "199,000 so'm"
 
-# Karta ma'lumotlari
+# Karta ma'lumotlari (KARTA RAQAMI ALMASHTIRILDI)
 CARD_INFO = {
-    "number": "4073 4200 3754 6953",
+    "number": "5614 6819 0336 6205",
     "name": "Shaxzod Odilov"
 }
 
@@ -194,7 +194,7 @@ async def handle_buy_callback(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 💡 To'lov qilgach, chek skrinshotini shu botga yuboring.
 
-📞 Bog'lanish: +998 99 497 55 22"""
+📞 Bog'lanish: @Moonboys_5522"""
     
     await query.edit_message_text(payment_text, parse_mode='HTML')
 
@@ -227,7 +227,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     course_name = context.user_data.get('selected_course', 'Noma\'lum kurs')
     
-    # Toshkent vaqt zonasi uchun (UTC+5)
+    # Toshkent vaqt zonasi uchun (UTC+5) - REAL VAQT
     current_time = datetime.datetime.now() + datetime.timedelta(hours=5)
     formatted_time = current_time.strftime('%d.%m.%Y | %H:%M:%S')
     
@@ -286,6 +286,10 @@ async def handle_approval(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = int(parts[1])
     course_name = parts[2] if len(parts) > 2 else "Noma'lum kurs"
     
+    # Toshkent vaqt zonasi uchun (UTC+5) - REAL VAQT
+    current_time = datetime.datetime.now() + datetime.timedelta(hours=5)
+    formatted_time = current_time.strftime('%d.%m.%Y | %H:%M:%S')
+    
     if action == "approve":
         added_to_group = await add_user_to_group(context, user_id, course_name)
         
@@ -312,7 +316,7 @@ async def handle_approval(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logger.error(f"Error sending approval to user: {e}")
             
         await query.edit_message_caption(
-            caption=f"✅ TO'LOV TASDIQLANDI\n\n{query.message.caption}\n\n⏰ Tasdiqlangan: {datetime.datetime.now().strftime('%H:%M')}"
+            caption=f"✅ TO'LOV TASDIQLANDI\n\n{query.message.caption}\n\n⏰ Tasdiqlangan vaqt: {formatted_time}"
         )
         
     elif action == "reject":
@@ -334,7 +338,7 @@ async def handle_approval(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logger.error(f"Error sending rejection to user: {e}")
             
         await query.edit_message_caption(
-            caption=f"❌ TO'LOV RAD ETILDI\n\n{query.message.caption}\n\n⏰ Rad etilgan: {datetime.datetime.now().strftime('%H:%M')}"
+            caption=f"❌ TO'LOV RAD ETILDI\n\n{query.message.caption}\n\n⏰ Rad etilgan vaqt: {formatted_time}"
         )
 
 async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -344,7 +348,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await show_categories(update, context)
     elif text == "👨‍💼 Admin bilan bog'lanish":
         await update.message.reply_text(
-            "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n📱 Telefon: +998 99 497 55 22\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
+            "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
         )
     elif text in CATEGORIES or text == "🎁 5 ta Kurs Jamlanmasi":
         await show_category_info(update, context)
