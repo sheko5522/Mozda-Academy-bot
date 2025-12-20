@@ -194,10 +194,6 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 ✈️ Telegram kursi
 📹 YouTube kursi
 
-🎁 MAXSUS BONUSLAR:
-• Target pro kursi
-• 3 ta savolga Kurs Asoschisini aniq javob berishi
-
 💡 O'z bilimingiz uchun sarmoya qilgan pulingizga achinmaysiz.
 🚀 2026-yilda birgalikda natijaga chiqaylik!"""
         
