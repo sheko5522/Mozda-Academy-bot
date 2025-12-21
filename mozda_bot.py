@@ -68,15 +68,15 @@ CATEGORIES = {
 PACKAGE_PRICE = "475,000 so'm"
 DISCOUNT_PRICE = "199,000 so'm"
 
-# Karta ma'lumotlari (KARTA RAQAMI ALMASHTIRILDI)
+# Karta ma'lumotlari
 CARD_INFO = {
     "number": "5614 6819 0336 6205",
     "name": "Shaxzod Odilov"
 }
 
-# Guruh ID lari - O'Zgartiring!
+# Guruh ID lari
 COURSE_GROUPS = {
-    "To'liq paket jamlanmasi": -1001234567890,  # O'ZGARTIRILDI
+    "To'liq paket jamlanmasi": -1001234567890,
     "🛒 Shopify Kurslari": -1001234567891,
     "🍇 Uzum Market": -1001234567892,
     "🇨🇳 Xitoy Kurslari": -1001234567893,
@@ -87,21 +87,78 @@ COURSE_GROUPS = {
 # KANAL ID
 ADMIN_CHANNEL_ID = -1003297660888
 
-# 1. ASOSIY MENYU
+# Fikrlar uchun media fayllar (rasmlar, videolar, tekstlar)
+FEEDBACKS = [
+    {
+        "type": "photo",
+        "file_id": "AgACAgQAAxkDAAIBOWf4Wf8u9WK4fGUsz7NjzpQb0zCuAAJvuTEbBkCQU7kEHDn7YfeEAQADAgADeQADNgQ",
+        "caption": "👤 Abdurahmon\n⭐️⭐️⭐️⭐️⭐️\n\nBu kurs mening hayotimni o'zgartirdi! Bir oy ichida oylik daromadim 3 barobar oshdi. Rahmat, Mozda Academy!",
+        "date": "15.12.2024"
+    },
+    {
+        "type": "photo",
+        "file_id": "AgACAgQAAxkDAAIBOmf4WgUQ0H88J5sPDbGpKYqw83gIAAJwuTEbBkCQU7S5tS_IrJwdAQADAgADeAADNgQ",
+        "caption": "👤 Dilshoda\n⭐️⭐️⭐️⭐️⭐️\n\nShopify kursini tugatgach, birinchi oyimda 1200$ daromad qildim. Darslar juda aniq va tushunarli!",
+        "date": "10.12.2024"
+    },
+    {
+        "type": "text",
+        "text": "👤 Akmal\n⭐️⭐️⭐️⭐️⭐️\n\nMen Turkiya kursini sotib oldim va endi Istanbul'dan tovarlarni O'zbekistonga import qilaman. Bir oyda 3000$ foyda! Rahmat!",
+        "date": "05.12.2024"
+    },
+    {
+        "type": "photo",
+        "file_id": "AgACAgQAAxkDAAIBO2f4WgxfkfqZ6Yp9H2wO3wGNjuGQAAJxuTEbBkCQU0n_1IBR5EZZAQADAgADbQADNgQ",
+        "caption": "👤 Sarvar\n⭐️⭐️⭐️⭐️⭐️\n\nTo'liq paketni sotib oldim va barcha kurslar ajoyib! Target Pro kursi mening reklamalarimni butunlay o'zgartirdi.",
+        "date": "01.12.2024"
+    },
+    {
+        "type": "text",
+        "text": "👤 Madina\n⭐️⭐️⭐️⭐️⭐️\n\nUzum Market kursi yordamida oyiga 5-7 million so'm daromad qila boshladim. Darslar juda amaliy va foydali!",
+        "date": "25.11.2024"
+    },
+    {
+        "type": "photo",
+        "file_id": "AgACAgQAAxkDAAIBPGf4WxDHKXhLJF6W8yveF1n7h6N-AAJyuTEbBkCQUz7Qb1uB0vEzAQADAgADeAADNgQ",
+        "caption": "👤 Behruz\n⭐️⭐️⭐️⭐️⭐️\n\nXitoy kursi yordamida Alibaba'dan tovarlar import qilishni o'rgandim. Endi o'zimning do'konim bor va daromadim barqaror.",
+        "date": "20.11.2024"
+    },
+    {
+        "type": "text",
+        "text": "👤 Shaxzod\n⭐️⭐️⭐️⭐️⭐️\n\nMarketing kursi yordamida Instagram'da 50k follower to'pladim va endi brendlar bilan hamkorlik qilaman. Kurs narxi uchun bu ajoyib natija!",
+        "date": "15.11.2024"
+    },
+    {
+        "type": "photo",
+        "file_id": "AgACAgQAAxkDAAIBPWf4WxnG_xHweP4qXWlKOk6rW9MpAAJzuTEbBkCQU_hqk6O8srdOAQADAgADeAADNgQ",
+        "caption": "👤 Kamola\n⭐️⭐️⭐️⭐️⭐️\n\nAI kursi yordamida videolar yaratishni o'rgandim. Endi kuniga 10-15 video tayyorlayman va YouTube kanalim o'smoqda!",
+        "date": "10.11.2024"
+    }
+]
+
+# 1. ASOSIY MENYU (O'ZGARTIRILDI - 3 ta tugma)
 main_keyboard = [
     [KeyboardButton("📚 Kurslar ro'yxati")],
-    [KeyboardButton("👨‍💼 Admin bilan bog'lanish")]
+    [KeyboardButton("👨‍💼 Admin bilan bog'lanish")],
+    [KeyboardButton("📢 Kurs haqidagi fikrlar")]  # YANGI TUGMA
 ]
 main_reply_markup = ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
 
-# 2. KURS KATEGORIYALARI (O'ZGARTIRILDI)
+# 2. KURS KATEGORIYALARI
 categories_keyboard = [
     [KeyboardButton("🛒 Shopify Kurslari"), KeyboardButton("🍇 Uzum Market")],
     [KeyboardButton("🇨🇳 Xitoy Kurslari"), KeyboardButton("🇹🇷 Turkiya Kursi")],
-    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 To'liq paket jamlanmasi")],  # O'ZGARTIRILDI
+    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 To'liq paket jamlanmasi")],
     [KeyboardButton("🔙 Orqaga")]
 ]
 categories_reply_markup = ReplyKeyboardMarkup(categories_keyboard, resize_keyboard=True)
+
+# Fikrlar menyusi
+feedback_keyboard = [
+    [KeyboardButton("▶️ Keyingi fikr")],
+    [KeyboardButton("🔙 Orqaga")]
+]
+feedback_reply_markup = ReplyKeyboardMarkup(feedback_keyboard, resize_keyboard=True)
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -116,6 +173,45 @@ async def show_categories(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📚 BIZNING KURSLAR\n\n🎯 Quyidagi kurslardan birini tanlang:",
         reply_markup=categories_reply_markup
     )
+
+async def show_feedbacks(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Kurs haqidagi fikrlarni ko'rsatish"""
+    user_id = update.effective_user.id
+    
+    # Foydalanuvchi uchun indeksni boshlang'ich qiymat sifatida o'rnatish
+    if 'feedback_index' not in context.user_data:
+        context.user_data['feedback_index'] = 0
+    
+    index = context.user_data['feedback_index']
+    
+    # Agar index ro'yxat chegarasidan oshib ketsa, qayta boshlash
+    if index >= len(FEEDBACKS):
+        index = 0
+        context.user_data['feedback_index'] = 0
+    
+    feedback = FEEDBACKS[index]
+    
+    # Fikr soni ko'rsatish
+    counter_text = f"📊 Fikr {index + 1}/{len(FEEDBACKS)}"
+    
+    if feedback['type'] == 'photo':
+        await update.message.reply_photo(
+            photo=feedback['file_id'],
+            caption=f"{counter_text}\n\n📅 {feedback['date']}\n\n{feedback['caption']}\n\n👇 Keyingi fikrni ko'rish uchun 'Keyingi fikr' tugmasini bosing",
+            reply_markup=feedback_reply_markup
+        )
+    else:
+        await update.message.reply_text(
+            f"{counter_text}\n\n📅 {feedback['date']}\n\n{feedback['text']}\n\n👇 Keyingi fikrni ko'rish uchun 'Keyingi fikr' tugmasini bosing",
+            reply_markup=feedback_reply_markup
+        )
+    
+    # Keyingi fikr uchun indeksni yangilash
+    context.user_data['feedback_index'] = index + 1
+
+async def next_feedback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Keyingi fikrni ko'rsatish"""
+    await show_feedbacks(update, context)
 
 async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     category_name = update.message.text
@@ -140,7 +236,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         context.user_data['selected_course'] = category_name
         context.user_data['course_price'] = category['price']
         
-    elif category_name == "🎁 To'liq paket jamlanmasi":  # O'ZGARTIRILDI
+    elif category_name == "🎁 To'liq paket jamlanmasi":
         package_text = f"""🎁 TO'LIQ PAKET JAMLAMASI
 
 💰 Oddiy narx: {PACKAGE_PRICE}
@@ -193,6 +289,10 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 📣 SMM kursi
 ✈️ Telegram kursi
 📹 YouTube kursi
+
+🎁 MAXSUS BONUSLAR:
+• Target pro kursi
+• 3 ta savolga Kurs Asoschisini aniq javob berishi
 
 💡 O'z bilimingiz uchun sarmoya qilgan pulingizga achinmaysiz.
 🚀 2026-yilda birgalikda natijaga chiqaylik!"""
@@ -385,9 +485,17 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
         )
-    elif text in CATEGORIES or text == "🎁 To'liq paket jamlanmasi":  # O'ZGARTIRILDI
+    elif text == "📢 Kurs haqidagi fikrlar":  # YANGI TUGMA
+        await show_feedbacks(update, context)
+    elif text in CATEGORIES or text == "🎁 To'liq paket jamlanmasi":
         await show_category_info(update, context)
+    elif text == "▶️ Keyingi fikr":  # YANGI TUGMA
+        await next_feedback(update, context)
     elif text == "🔙 Orqaga":
+        # Fikrlar indeksini qayta boshlash
+        if 'feedback_index' in context.user_data:
+            context.user_data['feedback_index'] = 0
+        
         await update.message.reply_text("🏠 Bosh menyu:", reply_markup=main_reply_markup)
     else:
         await update.message.reply_text("❌ Iltimos, pastdagi tugmalardan foydalaning!")
@@ -415,6 +523,7 @@ def main():
     
     logger.info("🤖 Mozda Academy Bot ishga tushdi!")
     logger.info(f"📊 Cheklar kanalga yuboriladi: {ADMIN_CHANNEL_ID}")
+    logger.info(f"📝 Fikrlar soni: {len(FEEDBACKS)} ta")
     
     # Polling rejimida ishga tushirish
     app.run_polling(
