@@ -146,7 +146,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 💰 Asl narxi: {PACKAGE_PRICE}
 🔥 AKSIYA NARXI: {DISCOUNT_PRICE}
 📉 196 000 so'm tejaysiz
-⏳ Faqat cheklangan muddat uchun!}
+⏳ Faqat cheklangan muddat uchun!
 
 📊 JAMLANMA TARKIBI:
 
