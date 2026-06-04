@@ -17,7 +17,7 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN', "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9
 # Kategoriyalar va narxlari
 CATEGORIES = {
     "🛒 Shopify Kurslari": {
-        "price": "199 ming so'm",
+        "price": "59 ming so'm",
         "courses": [
             "📦 Printify kursi",
             "🌐 Dropshipping", 
@@ -27,7 +27,7 @@ CATEGORIES = {
         ]
     },
     "🍇 Uzum Market": {
-        "price": "99 ming so'm",
+        "price": "59 ming so'm",
         "courses": [
             "📘 Uzum Premium",
             "📦 Mahsulot joylash",
@@ -65,8 +65,8 @@ CATEGORIES = {
         ]
     }
 }
-PACKAGE_PRICE = "475,000 so'm"
-DISCOUNT_PRICE = "199,000 so'm"
+PACKAGE_PRICE = "295,000 so'm"
+DISCOUNT_PRICE = "99,000 so'm"
 
 # Karta ma'lumotlari (KARTA RAQAMI ALMASHTIRILDI)
 CARD_INFO = {
