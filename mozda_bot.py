@@ -143,9 +143,8 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
     elif category_name == "🎁 To'liq paket jamlanmasi":  # O'ZGARTIRILDI
         package_text = f"""🎁 TO'LIQ PAKET JAMLAMASI
 
-💰 Asl narxi: {PACKAGE_PRICE}
-🔥 AKSIYA NARXI: {DISCOUNT_PRICE}
-📉 196 000 so'm tejaysiz
+🔥 99 000 so'm
+
 ⏳ Faqat cheklangan muddat uchun!
 
 📊 JAMLANMA TARKIBI:
