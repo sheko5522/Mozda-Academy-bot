@@ -74,7 +74,7 @@ CARD_INFO = {
     "name": "Shaxzod Odilov"
 }
 
-# Guruh ID lari
+# Guruh ID lari - O'ZGARTIRING!
 COURSE_GROUPS = {
     "To'liq paket jamlanmasi": -1001234567890,
     "🛒 Shopify Kurslari": -1001234567891,
@@ -131,7 +131,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         for course in category['courses']:
             info_text += f"\n• {course}"
         
-        # ✅ SOTIB OLISH TUGMASI - KO'K RANGLI QILINDI
+        # ✅ SOTIB OLISH TUGMASI - TO'LIQ KO'K RANGLI
         inline_keyboard = [
             [InlineKeyboardButton("🛒 Sotib olish", callback_data=f"buy_{category_name}", style="primary")]
         ]
@@ -199,7 +199,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 💡 O'z bilimingiz uchun sarmoya qilgan pulingizga achinmaysiz.
 🚀 2026-yilda birgalikda natijaga chiqaylik!"""
         
-        # ✅ PAKETNI SOTIB OLISH TUGMASI - KO'K RANGLI QILINDI
+        # ✅ PAKETNI SOTIB OLISH TUGMASI - TO'LIQ KO'K RANGLI
         inline_keyboard = [
             [InlineKeyboardButton("🛒 Paketni sotib olish", callback_data="buy_To'liq paket jamlanmasi", style="primary")]
         ]
