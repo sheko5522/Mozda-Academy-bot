@@ -68,15 +68,15 @@ CATEGORIES = {
 PACKAGE_PRICE = "295,000 so'm"
 DISCOUNT_PRICE = "99,000 so'm"
 
-# Karta ma'lumotlari (KARTA RAQAMI ALMASHTIRILDI)
+# Karta ma'lumotlari
 CARD_INFO = {
     "number": "5614 6819 0336 6205",
     "name": "Shaxzod Odilov"
 }
 
-# Guruh ID lari - O'Zgartiring!
+# Guruh ID lari - O'ZGARTIRING!
 COURSE_GROUPS = {
-    "To'liq paket jamlanmasi": -1001234567890,  # O'ZGARTIRILDI
+    "To'liq paket jamlanmasi": -1001234567890,
     "🛒 Shopify Kurslari": -1001234567891,
     "🍇 Uzum Market": -1001234567892,
     "🇨🇳 Xitoy Kurslari": -1001234567893,
@@ -94,11 +94,11 @@ main_keyboard = [
 ]
 main_reply_markup = ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
 
-# 2. KURS KATEGORIYALARI (O'ZGARTIRILDI)
+# 2. KURS KATEGORIYALARI
 categories_keyboard = [
     [KeyboardButton("🛒 Shopify Kurslari"), KeyboardButton("🍇 Uzum Market")],
     [KeyboardButton("🇨🇳 Xitoy Kurslari"), KeyboardButton("🇹🇷 Turkiya Kursi")],
-    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 To'liq paket jamlanmasi")],  # O'ZGARTIRILDI
+    [KeyboardButton("📢 Marketing"), KeyboardButton("🎁 To'liq paket jamlanmasi")],
     [KeyboardButton("🔙 Orqaga")]
 ]
 categories_reply_markup = ReplyKeyboardMarkup(categories_keyboard, resize_keyboard=True)
@@ -131,8 +131,9 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         for course in category['courses']:
             info_text += f"\n• {course}"
         
+        # ✅ SOTIB OLISH TUGMASI - TO'LIQ KO'K RANGLI
         inline_keyboard = [
-            [InlineKeyboardButton("🛒 Sotib olish", callback_data=f"buy_{category_name}")]
+            [InlineKeyboardButton("🛒 Sotib olish", callback_data=f"buy_{category_name}", style="primary")]
         ]
         inline_markup = InlineKeyboardMarkup(inline_keyboard)
         
@@ -140,7 +141,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
         context.user_data['selected_course'] = category_name
         context.user_data['course_price'] = category['price']
         
-    elif category_name == "🎁 To'liq paket jamlanmasi":  # O'ZGARTIRILDI
+    elif category_name == "🎁 To'liq paket jamlanmasi":
         package_text = f"""🎁 TO'LIQ PAKET JAMLAMASI
 
 🔥 99 000 so'm
@@ -149,8 +150,8 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 📊 JAMLANMA TARKIBI:
 
-            🔤 Mozda Academya
-               ⚡️ Pro yo'nalish.
+            🔤 Mozda Academya
+               ⚡️ Pro yo'nalish.
 
 📱 Target Pro (professional reklama)
 🤖 Sun'iy intellekt yordamida video yaratish
@@ -162,7 +163,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 📱 Biznesni oshiruvchi kitoblar to'plami
 
 
-    🛒 SHOPIFY YO'NALISHI
+    🛒 SHOPIFY YO'NALISHI
 
 💸 Shopify Dropshipping kursi
 💸 Printify kursi
@@ -178,7 +179,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 🍇 Uzum Premium kursi
 
-       🇨🇳 XITOY VA TURKIYA YO'NALISHI
+       🇨🇳 XITOY VA TURKIYA YO'NALISHI
 
 🇨🇳 1688 kursi
 🇨🇳 Taobao kursi
@@ -188,7 +189,7 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 🇹🇷 Turkiya kursi
 🇹🇷 Turkiya optom 300 ta kanallari
 
-        📱 MARKETING YO'NALISHI
+        📱 MARKETING YO'NALISHI
 
 📱 Instagram kursi
 📣 SMM kursi
@@ -198,8 +199,9 @@ async def show_category_info(update: Update, context: ContextTypes.DEFAULT_TYPE)
 💡 O'z bilimingiz uchun sarmoya qilgan pulingizga achinmaysiz.
 🚀 2026-yilda birgalikda natijaga chiqaylik!"""
         
+        # ✅ PAKETNI SOTIB OLISH TUGMASI - TO'LIQ KO'K RANGLI
         inline_keyboard = [
-            [InlineKeyboardButton("🛒 Paketni sotib olish", callback_data="buy_To'liq paket jamlanmasi")]
+            [InlineKeyboardButton("🛒 Paketni sotib olish", callback_data="buy_To'liq paket jamlanmasi", style="primary")]
         ]
         inline_markup = InlineKeyboardMarkup(inline_keyboard)
         
@@ -386,7 +388,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📞 Admin bilan bog'lanish:\n\n👨‍💼 Admin: @Moonboys_5522\n\n💬 Savollaringiz bo'lsa, bemalol murojaat qiling!"
         )
-    elif text in CATEGORIES or text == "🎁 To'liq paket jamlanmasi":  # O'ZGARTIRILDI
+    elif text in CATEGORIES or text == "🎁 To'liq paket jamlanmasi":
         await show_category_info(update, context)
     elif text == "🔙 Orqaga":
         await update.message.reply_text("🏠 Bosh menyu:", reply_markup=main_reply_markup)
