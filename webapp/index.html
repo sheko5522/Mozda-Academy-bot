@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mozda Academy</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .header {
+      position: relative;
+      height: 195px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+    .header-bg {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: brightness(0.78);
+      z-index: 0;
+    }
+    .header-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15,15,26,0.2) 0%, rgba(15,15,26,0.85) 100%);
+      z-index: 1;
+    }
+    .header-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 16px 18px;
+      text-align: center;
+      width: 100%;
+    }
+    .header-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      background: rgba(168,85,247,0.35);
+      border: 1px solid rgba(168,85,247,0.6);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 6px;
+      color: #e9d5ff;
+      backdrop-filter: blur(6px);
+    }
+    .header-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    .header-subtitle {
+      font-size: 12px;
+      color: #cbd5e1;
+      margin-top: 3px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    }
+
+    .back-btn {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.08);
+      border: none;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: background 0.2s;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.12); }
+    .back-btn.visible { display: flex; }
+
+    .page { display: none; padding: 20px; }
+    .page.active { display: block; }
+
+    .stats-bar { display: flex; gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      flex: 1;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-num { font-size: 20px; font-weight: 800; color: #a78bfa; }
+    .stat-label { font-size: 11px; opacity: 0.6; margin-top: 2px; }
+
+    .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #e2e8f0; }
+
+    .courses-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+
+    .course-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 18px 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+    .course-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--card-color) 0%, transparent 75%);
+      opacity: 0.12;
+      transition: opacity 0.25s;
+    }
+    .course-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--card-color);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .course-card:hover::before, .course-card:active::before { opacity: 0.25; }
+    .course-card:active { transform: scale(0.97); }
+
+    .course-card.shopify   { --card-color: #f59e0b; }
+    .course-card.uzum      { --card-color: #8b5cf6; }
+    .course-card.china     { --card-color: #ef4444; }
+    .course-card.turkey    { --card-color: #f97316; }
+    .course-card.marketing { --card-color: #06b6d4; }
+    .course-card.package {
+      grid-column: 1 / -1;
+      --card-color: #a855f7;
+      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(59,130,246,0.2));
+      border: 1px solid rgba(168,85,247,0.45);
+      padding: 20px 16px;
+    }
+    .course-card.package:hover {
+      border-color: #a855f7;
+      box-shadow: 0 10px 30px rgba(168,85,247,0.25);
+    }
+
+    .card-emoji { font-size: 32px; margin-bottom: 10px; position: relative; z-index: 1; }
+    .card-name { font-size: 13px; font-weight: 600; color: #e2e8f0; position: relative; z-index: 1; }
+    .card-price {
+      display: inline-block;
+      margin-top: 8px;
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #a78bfa;
+      position: relative;
+      z-index: 1;
+    }
+    .card-price.hot { background: linear-gradient(90deg, #f59e0b, #ef4444); color: #fff; }
+
+    .course-header {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .course-header-emoji { font-size: 48px; margin-bottom: 12px; }
+    .course-header-name { font-size: 20px; font-weight: 700; }
+    .course-header-price {
+      display: inline-block;
+      margin-top: 10px;
+      background: linear-gradient(90deg, #6c3ef4, #a855f7);
+      border-radius: 30px;
+      padding: 6px 20px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .modules-title {
+      font-size: 15px; font-weight: 600; color: #a78bfa;
+      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+    }
+
+    .module-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .module-check { color: #6c3ef4; font-size: 18px; }
+
+    .buy-btn-wrapper { margin-top: 24px; }
+    .buy-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #6c3ef4, #a855f7);
+      border: none;
+      border-radius: 16px;
+      padding: 18px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .buy-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .buy-btn:active { transform: scale(0.98); }
+
+    .payment-info {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .payment-info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      font-size: 14px;
+    }
+    .payment-info-row:last-child { border-bottom: none; }
+    .payment-info-label { opacity: 0.6; }
+    .payment-info-value { font-weight: 600; color: #a78bfa; }
+    .payment-info-value.price {
+      font-size: 18px; font-weight: 800;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .payment-title { text-align: center; font-size: 17px; font-weight: 700; margin-bottom: 16px; color: #e2e8f0; }
+
+    .payment-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      border: none;
+      border-radius: 18px;
+      padding: 16px 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-bottom: 14px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .payment-btn::after { content: 'Davom etish →'; font-size: 13px; color: rgba(255,255,255,0.7); white-space: nowrap; }
+    .payment-btn:active { transform: scale(0.98); }
+
+    .payme-btn {
+      background: linear-gradient(135deg, #cc1c1c, #ef4444);
+      box-shadow: 0 8px 32px rgba(239,68,68,0.4);
+    }
+    .payme-btn:hover { box-shadow: 0 12px 40px rgba(239,68,68,0.55); transform: translateY(-2px); }
+
+    .click-btn {
+      background: linear-gradient(135deg, #1a56db, #3b82f6);
+      box-shadow: 0 8px 32px rgba(59,130,246,0.4);
+    }
+    .click-btn:hover { box-shadow: 0 12px 40px rgba(59,130,246,0.55); transform: translateY(-2px); }
+
+    .pay-btn-left { display: flex; align-items: center; gap: 14px; }
+    .pay-logo {
+      width: 56px; height: 38px;
+      object-fit: contain;
+      background: rgba(255,255,255,0.95);
+      border-radius: 10px;
+      padding: 4px 6px;
+    }
+    .pay-btn-text { text-align: left; }
+    .pay-btn-name { font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: #fff; display: block; }
+    .pay-btn-desc { font-family: 'Inter', sans-serif; font-size: 12px; color: rgba(255,255,255,0.75); display: block; margin-top: 2px; }
+
+    .payment-note { text-align: center; font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 20px; line-height: 1.6; }
+
+    .fade-in { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <img class="header-bg" src="img/banner.jpg" alt="Mozda Academy Banner" />
+  <div class="header-overlay"></div>
+  <div class="header-content">
+    <div class="header-badge">🎓 ONLINE TA'LIM</div>
+    <div class="header-title">Mozda Academy</div>
+    <div class="header-subtitle">Zamonaviy kasblar va kurslar platformasi</div>
+  </div>
+</div>
+
+<button class="back-btn" id="backBtn" onclick="goBack()">← Orqaga</button>
+
+<!-- BOSH SAHIFA -->
+<div class="page active fade-in" id="homePage">
+  <div class="stats-bar">
+    <div class="stat-card"><div class="stat-num">5+</div><div class="stat-label">Yo'nalish</div></div>
+    <div class="stat-card"><div class="stat-num">30+</div><div class="stat-label">Kurs</div></div>
+    <div class="stat-card"><div class="stat-num">2026</div><div class="stat-label">Yil</div></div>
+  </div>
+  <div class="section-title">📚 Kurslar ro'yxati</div>
+  <div class="courses-grid">
+    <div class="course-card shopify" onclick="showCourse('shopify')">
+      <div class="card-emoji">🛒</div>
+      <div class="card-name">Shopify Kurslari</div>
+      <div class="card-price">59 000 so'm</div>
+    </div>
+    <div class="course-card uzum" onclick="showCourse('uzum')">
+      <div class="card-emoji">🍇</div>
+      <div class="card-name">Uzum Market</div>
+      <div class="card-price">59 000 so'm</div>
+    </div>
+    <div class="course-card china" onclick="showCourse('china')">
+      <div class="card-emoji">🇨🇳</div>
+      <div class="card-name">Xitoy Kurslari</div>
+      <div class="card-price">59 000 so'm</div>
+    </div>
+    <div class="course-card turkey" onclick="showCourse('turkey')">
+      <div class="card-emoji">🇹🇷</div>
+      <div class="card-name">Turkiya Kursi</div>
+      <div class="card-price">59 000 so'm</div>
+    </div>
+    <div class="course-card marketing" onclick="showCourse('marketing')">
+      <div class="card-emoji">📢</div>
+      <div class="card-name">Marketing</div>
+      <div class="card-price">59 000 so'm</div>
+    </div>
+    <div class="course-card package" onclick="showCourse('package')">
+      <div class="card-emoji">🎁</div>
+      <div class="card-name">To'liq Paket Jamlanmasi</div>
+      <div class="card-price hot">🔥 99 000 so'm</div>
+    </div>
+  </div>
+</div>
+
+<!-- KURS SAHIFASI -->
+<div class="page fade-in" id="coursePage">
+  <div class="course-header">
+    <div class="course-header-emoji" id="courseEmoji">🛒</div>
+    <div class="course-header-name"  id="courseName">—</div>
+    <div class="course-header-price" id="coursePrice">—</div>
+  </div>
+  <div class="modules-title">📋 Kurs tarkibi</div>
+  <div id="courseModules"></div>
+  <div class="buy-btn-wrapper">
+    <button class="buy-btn" onclick="showPayment()">🛒 Sotib olish</button>
+  </div>
+</div>
+
+<!-- TO'LOV SAHIFASI -->
+<div class="page fade-in" id="paymentPage">
+  <div class="payment-info">
+    <div class="payment-info-row">
+      <span class="payment-info-label">📦 Mahsulot</span>
+      <span class="payment-info-value" id="payCourseName">—</span>
+    </div>
+    <div class="payment-info-row">
+      <span class="payment-info-label">💵 Narxi</span>
+      <span class="payment-info-value price" id="payCoursePrice">—</span>
+    </div>
+  </div>
+  <div class="payment-title">💳 To'lov usulini tanlang</div>
+
+  <a class="payment-btn payme-btn" id="paymeBtn" href="#" target="_blank">
+    <div class="pay-btn-left">
+      <img class="pay-logo" src="img/payme.jpg" alt="Payme" />
+      <div class="pay-btn-text">
+        <span class="pay-btn-name">Payme</span>
+        <span class="pay-btn-desc">Tez va xavfsiz to'lov</span>
+      </div>
+    </div>
+  </a>
+
+  <a class="payment-btn click-btn" id="clickBtn" href="#" target="_blank">
+    <div class="pay-btn-left">
+      <img class="pay-logo" src="img/click.jpg" alt="Click" />
+      <div class="pay-btn-text">
+        <span class="pay-btn-name">Click</span>
+        <span class="pay-btn-desc">Onlayn to'lov tizimi</span>
+      </div>
+    </div>
+  </a>
+
+  <p class="payment-note">
+    To'lov amalga oshirilgach, chek skrinshotini botga yuboring.<br>
+    Tez orada kursga qo'shilasiz! ✅
+  </p>
+</div>
+
+<script>
+const PAYME_MERCHANT_ID = 'SIZNING_PAYME_MERCHANT_ID';
+const CLICK_SERVICE_ID  = 'SIZNING_CLICK_SERVICE_ID';
+const CLICK_MERCHANT_ID = 'SIZNING_CLICK_MERCHANT_ID';
+
+const courses = {
+  shopify:   { emoji:'🛒', name:"Shopify Kurslari",        price:"59 000 so'm", amount:59000, modules:["📦 Printify kursi","🌐 Dropshipping","💻 Liquid kodlari","📧 Email marketing","🎨 Dizayn templates"] },
+  uzum:      { emoji:'🍇', name:"Uzum Market",             price:"59 000 so'm", amount:59000, modules:["📘 Uzum Premium kursi","📦 Mahsulot joylash","💰 Narx strategiyasi","📢 Marketing","📈 Savdo oshirish"] },
+  china:     { emoji:'🇨🇳', name:"Xitoy Kurslari",         price:"59 000 so'm", amount:59000, modules:["🛒 1688 zakaz","📦 Taobao zakaz","🧺 Pinduoduo","📱 WeChat buyurtma","📇 Kontaktlar bazasi"] },
+  turkey:    { emoji:'🇹🇷', name:"Turkiya Kursi",          price:"59 000 so'm", amount:59000, modules:["📦 Optom kanallar","🛒 Zakaz qilish","🚚 Yetkazuvchilar"] },
+  marketing: { emoji:'📢', name:"Marketing",              price:"59 000 so'm", amount:59000, modules:["📸 Instagram kursi","✈️ Telegram kursi","🌐 SMM kursi","🎥 YouTube kursi","📝 Content marketing"] },
+  package:   { emoji:'🎁', name:"To'liq Paket Jamlanmasi", price:"99 000 so'm", amount:99000, modules:["📱 Target Pro (professional reklama)","🤖 Sun'iy intellekt bilan video yaratish","📈 Canva Pro bepul olish","🤖 Mukammal Telegram bot yaratish","🤖 4000+ AI workflow sxemasi","🛒 Shopify yo'nalishi (to'liq)","🍇 Uzum Premium kursi","🇨🇳 Xitoy va Turkiya kurslari","📱 To'liq Marketing kursi"] }
+};
+
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+
+let currentCourse = null;
+let pageHistory   = ['home'];
+
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById(pageId);
+  page.classList.add('active');
+  page.classList.remove('fade-in');
+  void page.offsetWidth;
+  page.classList.add('fade-in');
+  document.getElementById('backBtn').classList.toggle('visible', pageHistory.length > 1);
+}
+
+function goBack() {
+  if (pageHistory.length <= 1) return;
+  pageHistory.pop();
+  const map = { home:'homePage', course:'coursePage', payment:'paymentPage' };
+  showPage(map[pageHistory[pageHistory.length - 1]]);
+}
+
+function showCourse(id) {
+  const c = courses[id];
+  currentCourse = c;
+  document.getElementById('courseEmoji').textContent = c.emoji;
+  document.getElementById('courseName').textContent  = c.name;
+  document.getElementById('coursePrice').textContent = c.price;
+  document.getElementById('courseModules').innerHTML =
+    c.modules.map(m => `<div class="module-item"><span class="module-check">✦</span>${m}</div>`).join('');
+  pageHistory.push('course');
+  showPage('coursePage');
+}
+
+function showPayment() {
+  if (!currentCourse) return;
+  const c = currentCourse;
+  const uid = tg?.initDataUnsafe?.user?.id || '0';
+  document.getElementById('payCourseName').textContent  = c.name;
+  document.getElementById('payCoursePrice').textContent = c.price;
+  document.getElementById('paymeBtn').href = `https://checkout.paycom.uz/${PAYME_MERCHANT_ID}?amount=${c.amount * 100}&order_id=${uid}`;
+  document.getElementById('clickBtn').href  = `https://my.click.uz/services/pay?service_id=${CLICK_SERVICE_ID}&merchant_id=${CLICK_MERCHANT_ID}&amount=${c.amount}&transaction_param=${uid}`;
+  pageHistory.push('payment');
+  showPage('paymentPage');
+}
+</script>
+</body>
+</html>
