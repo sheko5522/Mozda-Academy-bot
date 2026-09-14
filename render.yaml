@@ -1,0 +1,66 @@
+services:
+  # ====== TELEGRAM BOT ======
+  - type: worker
+    name: mozda-academy-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false          # Render dashboard da kiriting
+      - key: PAYME_MERCHANT_ID
+        sync: false          # Render dashboard da kiriting
+      - key: CLICK_SERVICE_ID
+        sync: false          # Render dashboard da kiriting
+      - key: CLICK_MERCHANT_ID
+        sync: false          # Render dashboard da kiriting
+      - key: CLICK_SECRET_KEY
+        sync: false          # Render dashboard da kiriting
+      - key: CLICK_MERCHANT_USER_ID
+        sync: false          # Render dashboard da kiriting
+      - key: GROUP_FULL_PACKAGE
+        sync: false          # Render dashboard da kiriting
+      - key: GROUP_SHOPIFY
+        sync: false
+      - key: GROUP_UZUM
+        sync: false
+      - key: GROUP_CHINA
+        sync: false
+      - key: GROUP_TURKEY
+        sync: false
+      - key: GROUP_MARKETING
+        sync: false
+
+  # ====== WEBHOOK SERVER (Click + Payme) ======
+  - type: web
+    name: mozda-academy-webhook
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn payment_webhook:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: PAYME_MERCHANT_ID
+        sync: false
+      - key: PAYME_KEY
+        sync: false
+      - key: CLICK_SERVICE_ID
+        sync: false
+      - key: CLICK_MERCHANT_ID
+        sync: false
+      - key: CLICK_SECRET_KEY
+        sync: false
+      - key: CLICK_MERCHANT_USER_ID
+        sync: false
+      - key: GROUP_FULL_PACKAGE
+        sync: false
+      - key: GROUP_SHOPIFY
+        sync: false
+      - key: GROUP_UZUM
+        sync: false
+      - key: GROUP_CHINA
+        sync: false
+      - key: GROUP_TURKEY
+        sync: false
+      - key: GROUP_MARKETING
+        sync: false
