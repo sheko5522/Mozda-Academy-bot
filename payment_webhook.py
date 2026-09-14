@@ -29,13 +29,14 @@ BOT_TOKEN = os.environ.get('BOT_TOKEN', "8298231029:AAECxN_PcPECCTW8WEQ0x9co9rx9
 TELEGRAM_API = f"https://api.telegram.org/bot{BOT_TOKEN}"
 
 # Payme
-PAYME_MERCHANT_ID = ""      # ← Payme: Merchant ID
-PAYME_KEY         = ""      # ← Payme: Secret Key
+PAYME_MERCHANT_ID = os.environ.get('PAYME_MERCHANT_ID', '')
+PAYME_KEY         = os.environ.get('PAYME_KEY', '')
 
 # Click
-CLICK_SERVICE_ID  = ""      # ← Click: SERVICE_ID
-CLICK_MERCHANT_ID = ""      # ← Click: MERCHANT_ID
-CLICK_SECRET_KEY  = ""      # ← Click: SECRET_KEY
+CLICK_SERVICE_ID       = os.environ.get('CLICK_SERVICE_ID', '')
+CLICK_MERCHANT_ID      = os.environ.get('CLICK_MERCHANT_ID', '')
+CLICK_SECRET_KEY       = os.environ.get('CLICK_SECRET_KEY', '')
+CLICK_MERCHANT_USER_ID = os.environ.get('CLICK_MERCHANT_USER_ID', '')
 
 # Narxlar (tiyin)
 PRICES = {
